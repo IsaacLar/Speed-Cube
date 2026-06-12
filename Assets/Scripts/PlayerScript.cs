@@ -1,12 +1,19 @@
+using TMPro;
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
 
     public Rigidbody rb;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI gameOverText;
+    public Button replayButton;
+
     //Default sideways force
     public float sidewaysForce = 50f;
     //Player controls using new Input system
@@ -62,7 +69,10 @@ public class PlayerScript : MonoBehaviour
         //End game once collided with obstacle
         if (collision.collider.tag == "Obstacle")
         {
-            Debug.Log("Game Over!");
+            //Show game over text and replay button
+            gameOverText.gameObject.SetActive(true);
+            replayButton.gameObject.SetActive(true);
+            //Prevent player mvmt and score increase
             alive = false;
         }
     }
@@ -73,7 +83,14 @@ public class PlayerScript : MonoBehaviour
         if (other.tag == "Score" && alive)
         {
             score++;
-            Debug.Log("Score: "+ score.ToString());
+            //Display score on screen
+            scoreText.text = "Score : " + score.ToString();
         }
+    }
+
+    //Reload the scene when replay button clicked
+    public void onReplayClicked()
+    {
+        SceneManager.LoadScene("Level01");
     }
 }
