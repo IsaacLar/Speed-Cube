@@ -14,10 +14,11 @@ public class PlayerScript : MonoBehaviour
 
     private float moveDirection;
     private bool alive = true;
+    private int score;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        score = 0;
     }
 
     //Input System enable/disable
@@ -37,18 +38,18 @@ public class PlayerScript : MonoBehaviour
         if (alive)
         {
             //Add forward force to player
-            rb.AddForce(0, 0, forwardForce * Time.deltaTime);
+            //rb.AddForce(0, 0, forwardForce * Time.deltaTime);
 
             moveDirection = playerControls.ReadValue<float>();
 
             if (moveDirection > 0)
             {
-                rb.AddForce(sidewaysForce * Time.deltaTime, 0, 0);
+                rb.AddForce(sidewaysForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
             }
 
             if (moveDirection < 0)
             {
-                rb.AddForce(-sidewaysForce * Time.deltaTime, 0, 0);
+                rb.AddForce(-sidewaysForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
             }
         }
     }
@@ -59,6 +60,15 @@ public class PlayerScript : MonoBehaviour
         {
             Debug.Log("Game Over!");
             alive = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Score" && alive)
+        {
+            score++;
+            Debug.Log("Score: "+ score.ToString());
         }
     }
 }
