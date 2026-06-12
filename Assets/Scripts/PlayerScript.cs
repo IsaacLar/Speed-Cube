@@ -7,14 +7,17 @@ public class PlayerScript : MonoBehaviour
 {
 
     public Rigidbody rb;
-    public float forwardForce = 2000f;
-    public float sidewaysForce = 500f;
+    //Default sideways force
+    public float sidewaysForce = 50f;
     //Player controls using new Input system
     public InputAction playerControls;
 
+    //Stores output from Unity's input system
     private float moveDirection;
-    private bool alive = true;
-    private int score;
+
+    //General variables
+    public bool alive = true;
+    public int score;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -37,11 +40,11 @@ public class PlayerScript : MonoBehaviour
     {
         if (alive)
         {
-            //Add forward force to player
-            //rb.AddForce(0, 0, forwardForce * Time.deltaTime);
-
+            //Obtain mvmt direction of player
+            //1 = Right, -1 = Left
             moveDirection = playerControls.ReadValue<float>();
 
+            //Apply respective force to player object
             if (moveDirection > 0)
             {
                 rb.AddForce(sidewaysForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
@@ -56,6 +59,7 @@ public class PlayerScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        //End game once collided with obstacle
         if (collision.collider.tag == "Obstacle")
         {
             Debug.Log("Game Over!");
@@ -65,6 +69,7 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //Increment score when colliding with trigger and alive
         if (other.tag == "Score" && alive)
         {
             score++;
